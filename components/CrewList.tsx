@@ -10,7 +10,7 @@ const CREW_MEMBERS = [
   { name: 'Lopli', role: 'Voice Actor', bio: '', icon: Zap, color: 'text-purple-500' },
   { name: 'Hanzen', role: 'Voice Actor', bio: '', icon: Code, color: 'text-cyan-500' },
   { name: 'Keshi', role: 'Voice Actor', bio: '', icon: Palette, color: 'text-pink-500' },
-  { name: 'Rain', role: 'Voice Actor', bio: '', icon: Heart, color: 'text-blue-500' },
+  { name: 'Chiyaki', role: 'Voice Actor', bio: '', icon: Heart, color: 'text-blue-500' },
   { name: 'Nia', role: 'Voice Actor', bio: '', icon: Camera, color: 'text-green-500' },
   { name: 'Renmaru', role: 'Voice Actor', bio: '', icon: Music, color: 'text-indigo-500' },
   { name: 'Asep', role: 'Voice Actor', bio: '', icon: Cpu, color: 'text-slate-500' },

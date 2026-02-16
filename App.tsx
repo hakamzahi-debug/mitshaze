@@ -1,4 +1,3 @@
-
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -97,7 +96,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                     <p className="text-indigo-900 dark:text-indigo-300 font-medium">
                       Oh iya Channel ini tidak sendirian, ada teman studio ku juga ikut di kabutcraft:
                       <span className="block mt-2 font-bold text-indigo-600 dark:text-indigo-400">
-                        (MistHaze, Lopli, Hanzen, Keshi, Rain, Nia, Renmaru, Hanzen, Asep)
+                        (MistHaze, Lopli, Hanzen, Keshi, Chiyaki, Nia, Renmaru, Hanzen, Asep)
                       </span>
                     </p>
                   </div>
@@ -137,7 +136,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   </div>
                </div>
                
-               {/* Channel Profile Section (Sesuai Screenshot MistHaze) */}
+               {/* Channel Profile Section */}
                <div className="px-6 md:px-12 py-6 flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10 -mt-20 md:-mt-24">
                  <div className="w-32 h-32 md:w-48 md:h-48 rounded-full border-[8px] border-white dark:border-slate-900 bg-amber-400 overflow-hidden shadow-2xl shrink-0">
                     <img 
@@ -182,7 +181,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <div className="w-full max-w-[360px] md:max-w-md aspect-[9/16] rounded-[3rem] overflow-hidden shadow-[0_40px_80px_-15px_rgba(0,0,0,0.6)] border-[6px] border-indigo-600/40 bg-black relative group transition-transform hover:scale-[1.02]">
                     <iframe 
                       className="absolute inset-0 w-full h-full"
-                      src="https://www.youtube.com/embed/Q_j1aCXi12Q?modestbranding=1&rel=0&iv_load_policy=3" 
+                      src="https://www.youtube.com/embed/Q_j1aCXi12Q" 
                       title="Berita Terbaru KabutCraft"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -204,7 +203,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <div className="w-full max-w-[360px] md:max-w-md aspect-[9/16] rounded-[3rem] overflow-hidden shadow-[0_40px_80px_-15px_rgba(0,0,0,0.6)] border-[6px] border-purple-600/40 bg-black relative group transition-transform hover:scale-[1.02]">
                     <iframe 
                       className="absolute inset-0 w-full h-full"
-                      src="https://www.youtube.com/embed/n0rVATa_acw?modestbranding=1&rel=0&iv_load_policy=3" 
+                      src="https://www.youtube.com/embed/n0rVATa_acw" 
                       title="Video Terpopuler KabutCraft"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -351,7 +350,7 @@ const App: React.FC = () => {
       <footer className="fixed bottom-0 w-full py-4 border-t border-slate-200 dark:border-white/5 text-center bg-white/50 dark:bg-slate-950/50 backdrop-blur-md z-40 px-4">
         <div className="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-4">
           <span className="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 tracking-widest uppercase">@2026</span>
-          <span className="text-[9px] md:text-[11px] font-medium text-slate-400 uppercase tracking-[0.2em]">
+          <span className="text-[7px] md:text-[9px] font-medium text-slate-400 uppercase tracking-[0.2em] opacity-80">
             Dibuat oleh Kabut Craft dan dikembangkan oleh gemini
           </span>
         </div>
