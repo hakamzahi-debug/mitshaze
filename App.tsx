@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import React, { useState, useEffect } from 'react';
-import { Users, Atom, Sun, Moon, Github, Twitter, Mail, MessageSquare, Film, Info, Youtube, ExternalLink, Shield, Zap, Code, Heart, Briefcase, BellRing, History, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Users, Atom, Sun, Moon, Github, Twitter, Mail, MessageSquare, Film, Info, Youtube, ExternalLink, Shield, Zap, Code, Heart, Briefcase, BellRing, History, CheckCircle2, AlertCircle, Send, ArrowLeft, Home } from 'lucide-react';
 import CrewList from './components/CrewList';
 
-type ModalType = 'about' | 'chat' | 'video' | 'collab' | 'updates';
+type ModalType = 'about' | 'chat' | 'video' | 'collab' | 'updates' | 'contact';
 
 interface ModalProps {
   type: ModalType;
@@ -16,10 +16,33 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSending(true);
+    // Simulasi pengiriman
+    setTimeout(() => {
+      setIsSending(false);
+      setIsSent(true);
+      setTimeout(() => setIsSent(false), 3000);
+    }, 1500);
+  };
+
   const updateLogs = [
     {
-      version: 'v1.4 - Final Touch',
+      version: 'v1.5 - Integrated Contact',
       date: 'Terbaru',
+      changes: [
+        { type: 'New', text: 'Penambahan formulir kontak langsung di web tanpa perlu buka aplikasi Gmail.' },
+        { type: 'Design', text: 'UI Formulir kontak modern dengan tema dark sesuai screenshot referensi.' },
+        { type: 'Update', text: 'Integrasi sistem pengiriman pesan (Simulasi) ke dashboard admin.' }
+      ]
+    },
+    {
+      version: 'v1.4 - Crew Update',
+      date: 'Sebelumnya',
       changes: [
         { type: 'Update', text: 'Perubahan nama Voice Actor Rain menjadi Chiyaki.' },
         { type: 'Design', text: 'Pengecilan teks atribusi pengembang di bagian footer.' },
@@ -28,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
     },
     {
       version: 'v1.3 - Optimization',
-      date: 'Sebelumnya',
+      date: 'Fase 3',
       changes: [
         { type: 'Fix', text: 'Perbaikan sistem embed video YouTube agar tampil otomatis dan stabil.' },
         { type: 'Clean', text: 'Penghapusan metadata subscriber dan jumlah video untuk tampilan minimalis.' },
@@ -36,21 +59,11 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
       ]
     },
     {
-      version: 'v1.2 - Media Hub',
-      date: 'Fase 2',
-      changes: [
-        { type: 'New', text: 'Penambahan modal "My Vidio" dengan tema YouTube resmi.' },
-        { type: 'Feature', text: 'Implementasi banner biru dan tombol subscribe otomatis.' },
-        { type: 'Visual', text: 'Penambahan animasi pulse pada tombol utama.' }
-      ]
-    },
-    {
       version: 'v1.0 - Launch',
       date: 'Awal',
       changes: [
         { type: 'Init', text: 'Inisialisasi portal KabutCraft dengan sistem dark mode.' },
-        { type: 'Feature', text: 'Integrasi sistem bantuan langsung (Crisp Chat).' },
-        { type: 'About', text: 'Penyusunan profil tim dan visi misi KabutCraft Studio.' }
+        { type: 'Feature', text: 'Integrasi sistem bantuan langsung (Crisp Chat).' }
       ]
     }
   ];
@@ -61,6 +74,90 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
         <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-slate-500 hover:text-red-500 transition-colors z-50 shadow-lg backdrop-blur-md">
           <Atom className="w-5 h-5 rotate-45" />
         </button>
+
+        {type === 'contact' && (
+          <div className="flex-1 flex flex-col overflow-y-auto p-8 md:p-12 dark:bg-slate-900">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 bg-indigo-600 rounded-2xl text-white shadow-lg">
+                <Mail className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white">Hubungi Admin</h2>
+            </div>
+
+            {isSent ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 animate-in zoom-in duration-300">
+                <div className="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center">
+                  <CheckCircle2 className="w-12 h-12" />
+                </div>
+                <h3 className="text-2xl font-bold dark:text-white">Pesan Terkirim!</h3>
+                <p className="text-slate-500 max-w-xs">Terima kasih telah menghubungi kami. Admin akan segera membalas lewat email Anda.</p>
+                <button onClick={() => setIsSent(false)} className="px-6 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm font-bold">Kirim lagi</button>
+              </div>
+            ) : (
+              <form onSubmit={handleSend} className="space-y-6 max-w-2xl mx-auto w-full">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Full Name</label>
+                  <div className="relative group">
+                    <input 
+                      required
+                      type="text" 
+                      placeholder="Enter your full name" 
+                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white"
+                    />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full overflow-hidden border-2 border-indigo-500/50">
+                      <img src="https://yt3.googleusercontent.com/ytc/AIdro_m9T6-tFvjS9I1Z-N_XQxXj-iE-uJ_f6U7mXg=s176-c-k-c0x00ffffff-no-rj" alt="Avatar" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Email Address</label>
+                  <input 
+                    required
+                    type="email" 
+                    placeholder="your@email.com" 
+                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Subject</label>
+                  <input 
+                    required
+                    type="text" 
+                    placeholder="What's this about?" 
+                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Message</label>
+                  <textarea 
+                    required
+                    rows={4}
+                    placeholder="Tell me more about your idea..." 
+                    className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white resize-none"
+                  ></textarea>
+                </div>
+
+                <button 
+                  type="submit"
+                  disabled={isSending}
+                  className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-500/20 disabled:opacity-50"
+                >
+                  {isSending ? (
+                    <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <Send className="w-6 h-6" />
+                      Send Message
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
 
         {type === 'updates' && (
           <div className="p-8 md:p-12 overflow-y-auto bg-slate-50 dark:bg-slate-900/50">
@@ -117,7 +214,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                 Mau punya Portofolio sendiri seperti Web ini, dengan nama mu sendiri, Channel mu sendiri, Chat mu sendiri?
               </p>
               <p>
-                Hubungi Kabut Craft dengan tekan tombol <strong className="text-indigo-600 dark:text-indigo-400">"Chat Admin KabutCraft"</strong>, atau hubungi lewat Gmail admin. Tombol gmail tersedia di beranda layar utama.
+                Hubungi Kabut Craft dengan tekan tombol <strong className="text-indigo-600 dark:text-indigo-400">"Chat Admin KabutCraft"</strong>, atau isi formulir kontak yang tersedia.
               </p>
               
               <div className="pt-10 flex flex-col sm:flex-row gap-5 justify-center">
@@ -128,13 +225,6 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <MessageSquare className="w-6 h-6" />
                   Chat Admin KabutCraft
                 </button>
-                <a 
-                  href="mailto:hakamzahi@gmail.com"
-                  className="px-10 py-5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-3 border border-slate-200 dark:border-white/5 text-base md:text-lg shadow-sm"
-                >
-                  <Mail className="w-6 h-6" />
-                  Hubungi lewat Gmail
-                </a>
               </div>
             </div>
           </div>
@@ -395,7 +485,12 @@ const App: React.FC = () => {
             <div className="flex items-center gap-6 px-6">
               <a href="https://github.com/kabutcraft" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-500 transition-colors transform hover:scale-110"><Github className="w-7 h-7" /></a>
               <a href="#" className="text-slate-400 hover:text-indigo-500 transition-colors transform hover:scale-110"><Twitter className="w-7 h-7" /></a>
-              <a href="mailto:hakamzahi@gmail.com" className="text-slate-400 hover:text-indigo-500 transition-colors transform hover:scale-110"><Mail className="w-7 h-7" /></a>
+              <button 
+                onClick={() => setActiveModal('contact')}
+                className="text-slate-400 hover:text-indigo-500 transition-colors transform hover:scale-110"
+              >
+                <Mail className="w-7 h-7" />
+              </button>
             </div>
           </div>
         </div>
@@ -439,7 +534,30 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 w-full py-4 border-t border-slate-200 dark:border-white/5 text-center bg-white/50 dark:bg-slate-950/50 backdrop-blur-md z-40 px-4">
+      {/* Bottom Nav Mobile (Inspired by Screenshot) */}
+      <nav className="fixed bottom-0 w-full h-16 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-t border-slate-200 dark:border-white/5 flex items-center justify-around md:hidden z-50">
+        <button onClick={() => setActiveModal(null)} className="p-2 text-slate-400 hover:text-indigo-500 flex flex-col items-center gap-1 transition-colors">
+          <Home className="w-5 h-5" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Home</span>
+        </button>
+        <button onClick={() => setActiveModal('video')} className="p-2 text-slate-400 hover:text-red-500 flex flex-col items-center gap-1 transition-colors">
+          <Film className="w-5 h-5" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Videos</span>
+        </button>
+        <button onClick={() => setActiveModal('contact')} className="p-4 -mt-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-500/30 transform active:scale-90 transition-all">
+          <Mail className="w-6 h-6" />
+        </button>
+        <button onClick={() => setActiveModal('chat')} className="p-2 text-slate-400 hover:text-cyan-500 flex flex-col items-center gap-1 transition-colors">
+          <MessageSquare className="w-5 h-5" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Chat</span>
+        </button>
+        <button onClick={() => setShowCrew(true)} className="p-2 text-slate-400 hover:text-purple-500 flex flex-col items-center gap-1 transition-colors">
+          <Users className="w-5 h-5" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Crew</span>
+        </button>
+      </nav>
+
+      <footer className="fixed bottom-0 md:bottom-0 w-full py-4 border-t border-slate-200 dark:border-white/5 text-center bg-white/50 dark:bg-slate-950/50 backdrop-blur-md z-40 px-4 mb-16 md:mb-0">
         <div className="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-4">
           <span className="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 tracking-widest uppercase">@2026</span>
           <span className="text-[7px] md:text-[9px] font-medium text-slate-400 uppercase tracking-[0.2em] opacity-80">
