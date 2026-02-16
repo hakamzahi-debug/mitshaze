@@ -1,12 +1,13 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
 import React, { useState, useEffect } from 'react';
-import { Users, Atom, Sun, Moon, Github, Twitter, Mail, MessageSquare, Film, Info, Youtube, ExternalLink, Shield, Zap, Code, Heart, Briefcase, BellRing } from 'lucide-react';
+import { Users, Atom, Sun, Moon, Github, Twitter, Mail, MessageSquare, Film, Info, Youtube, ExternalLink, Shield, Zap, Code, Heart, Briefcase, BellRing, History, CheckCircle2, AlertCircle } from 'lucide-react';
 import CrewList from './components/CrewList';
 
-type ModalType = 'about' | 'chat' | 'video' | 'collab';
+type ModalType = 'about' | 'chat' | 'video' | 'collab' | 'updates';
 
 interface ModalProps {
   type: ModalType;
@@ -15,12 +16,95 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
+  const updateLogs = [
+    {
+      version: 'v1.4 - Final Touch',
+      date: 'Terbaru',
+      changes: [
+        { type: 'Update', text: 'Perubahan nama Voice Actor Rain menjadi Chiyaki.' },
+        { type: 'Design', text: 'Pengecilan teks atribusi pengembang di bagian footer.' },
+        { type: 'Atribusi', text: 'Pembaruan teks hak cipta menjadi @2026 Kabut Craft.' }
+      ]
+    },
+    {
+      version: 'v1.3 - Optimization',
+      date: 'Sebelumnya',
+      changes: [
+        { type: 'Fix', text: 'Perbaikan sistem embed video YouTube agar tampil otomatis dan stabil.' },
+        { type: 'Clean', text: 'Penghapusan metadata subscriber dan jumlah video untuk tampilan minimalis.' },
+        { type: 'Integrasi', text: 'Penerapan foto profil resmi sesuai screenshot (Karakter MistHaze).' }
+      ]
+    },
+    {
+      version: 'v1.2 - Media Hub',
+      date: 'Fase 2',
+      changes: [
+        { type: 'New', text: 'Penambahan modal "My Vidio" dengan tema YouTube resmi.' },
+        { type: 'Feature', text: 'Implementasi banner biru dan tombol subscribe otomatis.' },
+        { type: 'Visual', text: 'Penambahan animasi pulse pada tombol utama.' }
+      ]
+    },
+    {
+      version: 'v1.0 - Launch',
+      date: 'Awal',
+      changes: [
+        { type: 'Init', text: 'Inisialisasi portal KabutCraft dengan sistem dark mode.' },
+        { type: 'Feature', text: 'Integrasi sistem bantuan langsung (Crisp Chat).' },
+        { type: 'About', text: 'Penyusunan profil tim dan visi misi KabutCraft Studio.' }
+      ]
+    }
+  ];
+
   return (
     <div className="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-2 md:p-4 animate-in fade-in duration-300">
       <div className="bg-white dark:bg-slate-900 w-full max-w-4xl h-[92vh] md:h-[85vh] rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl relative flex flex-col">
         <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-slate-500 hover:text-red-500 transition-colors z-50 shadow-lg backdrop-blur-md">
           <Atom className="w-5 h-5 rotate-45" />
         </button>
+
+        {type === 'updates' && (
+          <div className="p-8 md:p-12 overflow-y-auto bg-slate-50 dark:bg-slate-900/50">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="p-3 bg-indigo-600 rounded-2xl text-white shadow-lg shadow-indigo-500/20">
+                <History className="w-8 h-8" />
+              </div>
+              <div>
+                <h2 className="text-3xl md:text-5xl font-display font-bold text-slate-900 dark:text-white tracking-tight">Riwayat Update</h2>
+                <p className="text-slate-500 dark:text-slate-400 font-medium">Log modifikasi portal dari waktu ke waktu.</p>
+              </div>
+            </div>
+
+            <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:w-0.5 before:-z-10 before:bg-gradient-to-b before:from-indigo-500 before:via-slate-200 before:to-transparent dark:before:via-slate-800">
+              {updateLogs.map((log, i) => (
+                <div key={i} className="relative pl-12 animate-in slide-in-from-left duration-500" style={{ animationDelay: `${i * 100}ms` }}>
+                  <div className="absolute left-0 top-1 w-10 h-10 bg-white dark:bg-slate-900 rounded-full border-4 border-indigo-500 flex items-center justify-center shadow-lg">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-500" />
+                  </div>
+                  <div className="bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-200 dark:border-white/5 shadow-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                      <h3 className="text-xl font-bold dark:text-white">{log.version}</h3>
+                      <span className="px-4 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full uppercase tracking-widest">{log.date}</span>
+                    </div>
+                    <ul className="space-y-3">
+                      {log.changes.map((change, j) => (
+                        <li key={j} className="flex items-start gap-3 group">
+                          <span className={`mt-1 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-tighter ${
+                            change.type === 'New' ? 'bg-green-100 text-green-600 dark:bg-green-900/20' : 
+                            change.type === 'Fix' ? 'bg-red-100 text-red-600 dark:bg-red-900/20' : 
+                            'bg-blue-100 text-blue-600 dark:bg-blue-900/20'
+                          }`}>
+                            {change.type}
+                          </span>
+                          <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{change.text}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {type === 'collab' && (
           <div className="p-8 md:p-12 overflow-y-auto flex flex-col items-center text-center justify-center h-full">
@@ -265,6 +349,14 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setActiveModal('updates')}
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-colors border border-slate-200 dark:border-white/10"
+                title="Update History"
+              >
+                <BellRing className="w-5 h-5" />
+              </button>
+
               <button 
                 onClick={() => setShowCrew(true)}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
