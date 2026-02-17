@@ -18,44 +18,65 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
-    // Simulasi pengiriman
-    setTimeout(() => {
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('https://formspree.io/f/meelkzra', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setIsSent(true);
+        setTimeout(() => setIsSent(false), 5000);
+        (e.target as HTMLFormElement).reset();
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Terjadi kesalahan saat mengirim pesan.');
+      }
+    } catch (err) {
+      setError('Gagal menghubungkan ke server. Periksa koneksi internet Anda.');
+    } finally {
       setIsSending(false);
-      setIsSent(true);
-      setTimeout(() => setIsSent(false), 3000);
-    }, 1500);
+    }
   };
 
   const updateLogs = [
     {
-      version: 'v1.5 - Integrated Contact',
+      version: 'v1.6 - Real Email Hub',
       date: 'Terbaru',
       changes: [
+        { type: 'New', text: 'Integrasi Formspree: Formulir kontak kini benar-benar mengirim pesan ke Gmail admin.' },
+        { type: 'Fix', text: 'Penambahan sistem penanganan error dan validasi pengiriman real-time.' },
+        { type: 'Update', text: 'Optimasi performa modal kontak untuk pengalaman pengguna yang lebih cepat.' }
+      ]
+    },
+    {
+      version: 'v1.5 - Integrated Contact',
+      date: 'Sebelumnya',
+      changes: [
         { type: 'New', text: 'Penambahan formulir kontak langsung di web tanpa perlu buka aplikasi Gmail.' },
-        { type: 'Design', text: 'UI Formulir kontak modern dengan tema dark sesuai screenshot referensi.' },
-        { type: 'Update', text: 'Integrasi sistem pengiriman pesan (Simulasi) ke dashboard admin.' }
+        { type: 'Design', text: 'UI Formulir kontak modern dengan tema dark sesuai screenshot referensi.' }
       ]
     },
     {
       version: 'v1.4 - Crew Update',
-      date: 'Sebelumnya',
+      date: 'Fase 4',
       changes: [
         { type: 'Update', text: 'Perubahan nama Voice Actor Rain menjadi Chiyaki.' },
-        { type: 'Design', text: 'Pengecilan teks atribusi pengembang di bagian footer.' },
         { type: 'Atribusi', text: 'Pembaruan teks hak cipta menjadi @2026 Kabut Craft.' }
-      ]
-    },
-    {
-      version: 'v1.3 - Optimization',
-      date: 'Fase 3',
-      changes: [
-        { type: 'Fix', text: 'Perbaikan sistem embed video YouTube agar tampil otomatis dan stabil.' },
-        { type: 'Clean', text: 'Penghapusan metadata subscriber dan jumlah video untuk tampilan minimalis.' },
-        { type: 'Integrasi', text: 'Penerapan foto profil resmi sesuai screenshot (Karakter MistHaze).' }
       ]
     },
     {
@@ -90,16 +111,24 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <CheckCircle2 className="w-12 h-12" />
                 </div>
                 <h3 className="text-2xl font-bold dark:text-white">Pesan Terkirim!</h3>
-                <p className="text-slate-500 max-w-xs">Terima kasih telah menghubungi kami. Admin akan segera membalas lewat email Anda.</p>
-                <button onClick={() => setIsSent(false)} className="px-6 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm font-bold">Kirim lagi</button>
+                <p className="text-slate-500 max-w-xs">Terima kasih telah menghubungi kami. Pesan Anda telah diteruskan ke Gmail admin.</p>
+                <button onClick={() => setIsSent(false)} className="px-6 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm font-bold mt-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Kirim lagi</button>
               </div>
             ) : (
               <form onSubmit={handleSend} className="space-y-6 max-w-2xl mx-auto w-full">
+                {error && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl flex items-center gap-3 animate-in slide-in-from-top-2">
+                    <AlertCircle className="w-5 h-5" />
+                    <span className="text-sm font-bold">{error}</span>
+                  </div>
+                )}
+                
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Full Name</label>
                   <div className="relative group">
                     <input 
                       required
+                      name="name"
                       type="text" 
                       placeholder="Enter your full name" 
                       className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white"
@@ -114,6 +143,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Email Address</label>
                   <input 
                     required
+                    name="email"
                     type="email" 
                     placeholder="your@email.com" 
                     className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white"
@@ -124,6 +154,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Subject</label>
                   <input 
                     required
+                    name="subject"
                     type="text" 
                     placeholder="What's this about?" 
                     className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white"
@@ -134,6 +165,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                   <label className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Message</label>
                   <textarea 
                     required
+                    name="message"
                     rows={4}
                     placeholder="Tell me more about your idea..." 
                     className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white resize-none"
@@ -143,7 +175,7 @@ const Modal: React.FC<ModalProps> = ({ type, onClose, onOpenChat }) => {
                 <button 
                   type="submit"
                   disabled={isSending}
-                  className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-500/20 disabled:opacity-50"
+                  className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-500/20 disabled:opacity-50 active:scale-[0.98]"
                 >
                   {isSending ? (
                     <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
